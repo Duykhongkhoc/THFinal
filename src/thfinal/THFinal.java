@@ -45,6 +45,11 @@ public class THFinal {
         });
         JButton lietKe = new JButton();
         lietKe.setText("Liet ke Hoa Don");
+        lietKe.addActionListener((e) -> {
+            LietKe_JFrame lietKe_JFrame = new LietKe_JFrame();
+            lietKe_JFrame.setVisible(true);
+            lietKe_JFrame.setLocationRelativeTo(null);
+        });
         mainFrame.add(themNV);
         mainFrame.add(themHD);
         mainFrame.add(lietKe);

@@ -4,6 +4,11 @@
  */
 package thfinal;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author jiang
@@ -28,7 +33,7 @@ public class ThemHoaDon_JFrame extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         maNhanVien_jLabel = new javax.swing.JLabel();
-        maNhanVien_jTextField = new javax.swing.JTextField();
+        maNV_jComboBox = new javax.swing.JComboBox<>();
         soHoaDon_jLabel = new javax.swing.JLabel();
         soHoaDon_jTextField = new javax.swing.JTextField();
         ngayLap_jLabel = new javax.swing.JLabel();
@@ -36,10 +41,12 @@ public class ThemHoaDon_JFrame extends javax.swing.JFrame {
         triGia_jLabel = new javax.swing.JLabel();
         triGia_jTextField = new javax.swing.JTextField();
         themHoaDon_jButton = new javax.swing.JButton();
+        maKH_jLabel = new javax.swing.JLabel();
+        maKH_jComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
-        layout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        layout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         getContentPane().setLayout(layout);
 
@@ -48,12 +55,13 @@ public class ThemHoaDon_JFrame extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         getContentPane().add(maNhanVien_jLabel, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 23;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(maNhanVien_jTextField, gridBagConstraints);
+        getContentPane().add(maNV_jComboBox, gridBagConstraints);
 
         soHoaDon_jLabel.setText("Số hóa đơn");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -104,17 +112,55 @@ public class ThemHoaDon_JFrame extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         getContentPane().add(themHoaDon_jButton, gridBagConstraints);
 
+        maKH_jLabel.setText("Mã khách hàng");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(maKH_jLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 23;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(maKH_jComboBox, gridBagConstraints);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void setMaNVVaMaKH() {
+        String sqlKH = "select MAKH from KHACHHANG";
+        ResultSet maKH_resultSet = ExcuteSQLStatement.ExcuteSQLQuery(sqlKH);
+        try {
+            while (maKH_resultSet.next()) {
+                maKH_jComboBox.addItem(maKH_resultSet.getString("MAKH"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ThemHoaDon_JFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sqlNV = "select MANV from NHANVIEN";
+        ResultSet maNV_resultSet = ExcuteSQLStatement.ExcuteSQLQuery(sqlNV);
+        try {
+            while(maNV_resultSet.next())
+            {
+                maNV_jComboBox.addItem(maNV_resultSet.getString("MANV"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ThemHoaDon_JFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void themHoaDon_jButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_themHoaDon_jButtonActionPerformed
         // TODO add your handling code here:
-        String maNV = maNhanVien_jTextField.getText();
+        String maNV = (String) maNV_jComboBox.getSelectedItem();
+        String maKH = (String) maKH_jComboBox.getSelectedItem();
         String soHoaDon = soHoaDon_jTextField.getText();
         String ngayLap = ngayLap_jTextField.getText();
-        String triGia = triGia_jTextField.getText(); 
-        ExcuteSQLStatement.ExcuteSQLUpdate("insert into HOADON values ('" + maNV + "', '" +soHoaDon +"','" +ngayLap+ "','" +triGia +"')");
-        maNhanVien_jTextField.setText("");
+        String triGia = triGia_jTextField.getText();        
+        ExcuteSQLStatement.ExcuteSQLUpdate("insert into HOADON values ('" + maNV + "', '" + maKH + "', '" + soHoaDon + "','" + ngayLap + "','" + triGia + "')");
+        maKH_jComboBox.setSelectedIndex(0);
+        maNV_jComboBox.setSelectedIndex(0);
         soHoaDon_jTextField.setText("");
         ngayLap_jTextField.setText("");
         triGia_jTextField.setText("");
@@ -160,8 +206,10 @@ public class ThemHoaDon_JFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> maKH_jComboBox;
+    private javax.swing.JLabel maKH_jLabel;
+    private javax.swing.JComboBox<String> maNV_jComboBox;
     private javax.swing.JLabel maNhanVien_jLabel;
-    private javax.swing.JTextField maNhanVien_jTextField;
     private javax.swing.JLabel ngayLap_jLabel;
     private javax.swing.JTextField ngayLap_jTextField;
     private javax.swing.JLabel soHoaDon_jLabel;
